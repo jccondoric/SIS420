@@ -1,0 +1,46 @@
+1. Importación y exploración del dataset
+  - Se cargó un archivo .csv con información de perfiles sociales.
+  - Se revisaron los tipos de datos (int, float, object) y se identificaron valores nulos.
+  - Se eliminaron columnas irrelevantes (como IDs, fechas o campos constantes) para enfocar el análisis en variables predictoras
+  Resultado: un dataset limpio con 11 columnas (10 predictoras + 1 objetivo)
+
+2. Conversión de variables categóricas
+  - Se transformaron variables tipo texto como "True"/"False" a valores binarios (1 o 0) usando .apply(...).
+  - Posteriormente se confirmó que estas columnas estaban en tipo int64.
+  Esto permitió que el modelo pueda procesarlas como variables numéricas.
+
+
+3. Separación de variables dependientes e independientes
+  - Se definió X como el conjunto de variables predictoras (10 columnas)
+  - Se definió y como la variable objetivo (target)
+  Preparación clásica para modelos supervisados.
+
+4. División en entrenamiento y prueba
+  - Se aplicó train_test_split con 80% para entrenamiento y 20% para prueba.
+  - Se usó .iloc para seleccionar columnas por posición, siguiendo el estilo tradicional.
+  Resultado: X_train, y_train, X_test, y_test correctamente separados.
+
+6. Normalización manual
+  - Se implementó una función featureNormalize(X) que calcula media (mu) y desviación estándar (sigma) por columna.
+  - Se normalizó X_train y luego X_test usando los mismos parámetros.
+  - Se agregó una columna de unos para el término independiente (bias).
+  Esto preparó los datos para aplicar regresión logística desde cero.
+
+7. Implementación de regresión logística
+  - Se definió la función sigmoid(z) para calcular la probabilidad.
+  - Se implementó calcularCosto(theta, X, y) para evaluar el error.
+  - Se aplicó descensoGradiente(...) para ajustar los parámetros theta durante 60,000 iteraciones.
+  Resultado: se obtuvo un vector theta optimizado y se graficó la convergencia del costo.
+
+8. Evaluación del modelo
+  - Se aplicó el modelo sobre X_test_ready para obtener probabilidades (y_predicha).
+  - Se aplicó un umbral de 0.5 para clasificar como 0 o 1 (y_umbral).
+  - Se construyó una tabla con y_test, y_predicha y las variables originales para revisar los resultados.
+  - Se calculó la precisión del modelo con np.mean(y_umbral == y_test).
+  Resultado: precisión de entrenamiento ≈ 35.49%, indicando que las variables actuales no explican bien el target.
+
+9. Análisis de correlación
+  - Se revisó la correlación entre cada variable y target.
+  - Se encontró que ninguna variable tenía correlación significativa (todas < 0.11).
+  - Esto confirmó que el modelo está bien implementado, pero los datos no contienen señales predictivas fuertes.
+
