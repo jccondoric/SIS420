@@ -1,0 +1,68 @@
+1. Importación y exploración del dataset
+   - Se cargó el archivo KAG_energydata_complete.csv con datos de consumo
+     energético de una casa en Bélgica recolectados cada 10 minutos.
+   - Se revisaron los tipos de datos (int, float, object) y se verificó
+     que no existen valores nulos en ninguna columna.
+   Resultado: dataset limpio con 19,735 registros y 29 columnas.
+
+2. Preparación del dataset
+   - La columna 'date' era de tipo texto, por lo que se convirtió a
+     valores numéricos usando pd.Categorical().codes.
+   - Se definió y como la columna 'Appliances' (consumo en Wh).
+   - Se definió X como las 28 columnas restantes (temperatura, humedad,
+     presión, luminosidad, etc.).
+   - Se imprimieron los primeros 20 ejemplos para verificar los datos.
+   Resultado: X de forma (19735, 28) e y de forma (19735,).
+
+3. Visualización de los datos
+   - Se graficaron 3 características contra la variable objetivo:
+     temperatura del salón, humedad del salón y temperatura exterior.
+   - Las gráficas mostraron que sí existe alguna relación entre las
+     características y el consumo, validando el uso del dataset.
+
+4. MODELO 1 — Regresión Lineal (Descenso por Gradiente)
+   - Se normalizaron las características (media=0, std=1) con
+     featureNormalize() para que el gradiente converja correctamente.
+   - Se agregó una columna de unos para el término de intercepción (θ₀).
+   - Se implementó computeCostMulti() para calcular el costo J(θ).
+   - Se aplicó gradientDescentMulti() con α=0.01 y 5,000 iteraciones.
+   - Se graficó la convergencia del costo.
+   - Se realizaron 100 predicciones normalizando los datos de entrada.
+   Resultado: costo bajó de 9,916 a 4,394. Error promedio: 63.27 Wh.
+
+5. MODELO 2 — Ecuación Normal
+   - Se recargaron los datos originales SIN normalizar.
+   - Se implementó normalEqn() usando la pseudo-inversa (pinv) para
+     mayor estabilidad numérica con columnas correlacionadas.
+   - Se calculó θ directamente en un solo paso, sin iteraciones.
+   - Se graficó el costo vs escala de theta para mostrar el mínimo.
+   - Se realizaron 100 predicciones sin necesidad de normalizar.
+   Resultado: costo = 4,380. Error promedio: 64.00 Wh.
+
+6. MODELO 3 — Regresión Polinómica
+   - Se recargaron los datos originales.
+   - Se expandió X agregando el cuadrado de cada columna:
+     X = [X, X²], pasando de 28 a 56 características.
+   - Se normalizó el X expandido antes de aplicar el gradiente.
+   - Se aplicó gradientDescentMulti() con α=0.01 y 5,000 iteraciones.
+   - Se graficó la convergencia del costo.
+   - Se realizaron 100 predicciones aplicando la misma expansión y
+     normalización del entrenamiento.
+   Resultado: costo bajó de 9,902 a 4,365. Error promedio: 66.42 Wh.
+
+7. Comparación de los tres modelos
+   - Se compararon los errores promedio de los 3 modelos en las 100
+     predicciones y se graficó una barra comparativa.
+   Resultado:
+     Regresión Lineal (Gradiente): 63.27 Wh  ← mejor predicción
+     Ecuación Normal:              64.00 Wh
+     Regresión Polinómica:         66.42 Wh
+
+8. Conclusiones
+   - Los tres modelos obtuvieron errores similares (63-67 Wh), lo que
+     indica que el consumo energético tiene alta variabilidad y no se
+     explica completamente con relaciones lineales.
+   - La Ecuación Normal obtuvo el menor costo final (4,380) pero requirió
+     pseudo-inversa por columnas correlacionadas en el dataset.
+   - La Regresión Polinómica tuvo el costo más bajo (4,365), sugiriendo
+     que con más iteraciones podría superar a los otros modelos.
